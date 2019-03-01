@@ -161,10 +161,6 @@ class Run(Command):
 
         environments = list(environment.get_environments(conf, env_spec))
 
-        if environment.is_existing_only(environments):
-            # No repository required, so skip using it
-            conf.dvcs = "none"
-
         has_existing_env = any(isinstance(env, environment.ExistingEnvironment)
                                for env in environments)
 
@@ -386,7 +382,7 @@ class Run(Command):
                         params['python'] = env.python
                         params.update(env.requirements)
 
-                        skip_save = (dry_run or isinstance(env, environment.ExistingEnvironment))
+                        skip_save = dry_run
 
                         skip_list = skipped_benchmarks[(commit_hash, env.name)]
                         benchmark_set = benchmarks.filter_out(skip_list)
