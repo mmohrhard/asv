@@ -9,6 +9,7 @@ import sys
 import logging
 import traceback
 import itertools
+import datetime
 
 from collections import defaultdict
 
@@ -166,7 +167,7 @@ class Run(Command):
 
         environments = list(environment.get_environments(conf, env_spec))
 
-        if environment.is_existing_only(environments) and set_commit_hash is None:
+        if environment.is_existing_only(environments):
             # No repository required, so skip using it
             conf.dvcs = "none"
 
@@ -399,12 +400,15 @@ class Run(Command):
 
                         if set_commit_hash is not None:
                             commit_hash = set_commit_hash
+                            commit_date = str(datetime.datetime.now())
+                        else:
+                            commit_date = repo.get_date(commit_has)
 
                         result = Results(
                             params,
                             env.requirements,
                             commit_hash,
-                            repo.get_date(commit_hash),
+                            commit_date,
                             env.python,
                             env.name)
 
